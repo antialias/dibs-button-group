@@ -6,8 +6,12 @@
  */
 
 var Backbone = require('backbone-base-and-form-view');
+var SimplyDeferred = require('simply-deferred');
+var Deferred = SimplyDeferred.Deferred;
+var hasClass = require('amp-has-class');
+var addClass = require('amp-add-class');
+var removeClass = require('amp-remove-class');
 var _ = require('underscore');
-var $ = require('jquery');
 var templates = require('./template');
 
 /**
@@ -60,12 +64,14 @@ var ButtonGroup = Backbone.BaseView.extend({
         });
         this.$el.empty();
         _.each(this._buttons, (btnOptions, btnKey) => {
-            var $btn = $("<div>").html(this.btnTpl(btnOptions)).contents();
+            var btn = document.createElement('div');
+            btn.innerHTML = this.btnTpl(btnOptions);
+            btn = btn.childNodes.item(1);
             if (btnOptions.attributes) {
-                $btn.attr(btnOptions.attributes);
+                _(btnOptions.attributes).each((value, key) => btn.setAttribute(key, value));
             }
-            $btn.find('button').attr('data-button', btn);
-            this.$el.append($btn);
+            btn.querySelector('button').setAttribute('data-button', btnKey);
+            this.$el.append(btn);
         });
         return this;
     },
@@ -74,18 +80,16 @@ var ButtonGroup = Backbone.BaseView.extend({
      * @param {$.Event} e
      */
     clickBtn(e) {
-        var $btn = $(e.currentTarget);
-        var btnOptions = this._buttons[$btn.attr('data-button')];
+        var btn = e.currentTarget;
+        var btnOptions = this._buttons[btn.getAttribute('data-button')];
         var context = btnOptions.context || this.defaultContext || this;
         var prom;
         var appendLoaderFunc = this.prependLoading ? 'prepend' : 'append';
-        var $loading;
-        var self = this;
-
+        var loading;
         // Prevent the page from refreshing (we allow propagation however)
         e.preventDefault();
 
-        if ($btn.hasClass('disabled') || $btn.hasClass(this.disabledClass)) {
+        if (hasClass(btn, 'disabled') || hasClass(btn, this.disabledClass)) {
             return;
         }
         if (btnOptions.handler) {
@@ -93,15 +97,18 @@ var ButtonGroup = Backbone.BaseView.extend({
         }
         // Test to see if the handler returns a promise (the same way jQuery does it).
         if (prom && _.isFunction(prom.promise)) {
-            $loading = $('<li data-loading class="' + self.loadingClass + '"></li>').css('padding', 0);
-            self.$el[appendLoaderFunc]($loading);
-            self.disableButtons($btn);
+            loading = document.createElement('div');
+            loading.innerHTML = '<li data-loading class="' + this.loadingClass + '"></li>';
+            loading = loading.childNodes.item(0);
+            loading.style.padding = 0;
+            this.$el[appendLoaderFunc](loading);
+            this.disableButtons();
         }
 
-        $.when(prom).always(function () {
-            self.removeLoadingEl();
-            self.reEnableButtons($btn);
-            self.trigger('buttonClick', btnOptions, _.result(prom, 'state'));
+        SimplyDeferred.when(prom).always(() => {
+            this.removeLoadingEl();
+            this.reEnableButtons();
+            this.trigger('buttonClick', btnOptions, _.result(prom, 'state'));
         });
     },
 
@@ -109,8 +116,8 @@ var ButtonGroup = Backbone.BaseView.extend({
         this.$('[data-loading]').remove();
     },
 
-    reEnableButtons: function () {
-        this.$('[data-button]').removeClass('disabled ' + this.disabledClass);
+    reEnableButtons() {
+        removeClass(this.$('[data-button]').get(0), 'disabled ' + this.disabledClass);
     },
 
     /**
@@ -119,11 +126,10 @@ var ButtonGroup = Backbone.BaseView.extend({
     disableButtons () {
         var disabledClass = this.disabledClass;
         this.$('[data-button]').each(function (i, btn) {
-            var $btn = $(btn);
-            if ($btn.hasClass('disabled') || $btn.hasClass(disabledClass)) {
+            if (hasClass(btn, 'disabled') || hasClass(btn, disabledClass)) {
                 return;
             }
-            $btn.addClass('disabled disabled-by-btnView ' + disabledClass);
+            addClass(btn, 'disabled disabled-by-btnView ' + disabledClass);
         });
     }
 });

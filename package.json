@@ -6,7 +6,11 @@
   },
   "main": "view.es.js",
   "dependencies": {
-    "jquery": "^2.1.4",
+    "amp-add-class": "^1.1.0",
+    "amp-has-class": "^1.0.3",
+    "amp-remove-class": "^1.1.0",
+    "backbone-base-and-form-view": "^0.8.4",
+    "simply-deferred": "^3.0.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
