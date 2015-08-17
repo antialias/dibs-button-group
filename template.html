@@ -1,0 +1,7 @@
+<script type="text/template" id="button-view-template">
+    <li class="top-align<%= obj.btnWrapperClass ? ' ' + obj.btnWrapperClass : '' %>">
+        <button class="btn <%= obj.className ? obj.className : 'btn-default'  %><%= obj.type ? ' ' + obj.type : '' %><%= obj.primary ? ' button-primary' : '' %>"
+            <%= obj.dataTn ? 'data-tn="' + obj.dataTn + '"' : '' %>><%= obj.text %></button>
+        <% if (obj.help) { %><div class="help text-muted small-line-height<%= (obj.helpClass) ? ' ' + obj.helpClass : ''%>"><small><%= obj.help %></small></div><% } %>
+    </li>
+</script>

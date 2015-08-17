@@ -1,0 +1,15 @@
+{
+  "name": "dibs-button-group",
+  "version": "0.0.2",
+  "scripts": {
+    "test": "node kesselRunner"
+  },
+  "main": "view.es.js",
+  "dependencies": {
+    "jquery": "^2.1.4",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "kesselrun": "^0.3.1"
+  }
+}
