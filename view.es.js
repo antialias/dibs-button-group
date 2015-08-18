@@ -5,7 +5,8 @@
  * Time: 4:32 PM
  */
 
-var Backbone = require('backbone-base-and-form-view');
+var Backbone = require('backbone');
+var BaseView = require('baseview');
 var SimplyDeferred = require('simply-deferred');
 var Deferred = SimplyDeferred.Deferred;
 var hasClass = require('amp-has-class');
@@ -29,7 +30,7 @@ var templates = require('./template');
  * @param {string} [options.loadingClass=icon icon-xlarge icon-spinner icon-spin]
  * @param {boolean} [options.prependLoading=false]
  */
-var ButtonGroup = Backbone.BaseView.extend({
+var ButtonGroup = BaseView.extend({
     tagName: 'ul',
     className: 'controls-group list-inline',
     disabledClass: 'disabled dibs-disable',

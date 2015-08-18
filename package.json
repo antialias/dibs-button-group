@@ -9,11 +9,14 @@
     "amp-add-class": "^1.1.0",
     "amp-has-class": "^1.0.3",
     "amp-remove-class": "^1.1.0",
+    "backbone": "^1.2.1",
     "backbone-base-and-form-view": "^0.8.4",
     "simply-deferred": "^3.0.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "baseview": "0.0.3",
+    "formview": "0.0.0",
     "kesselrun": "^0.3.1"
   }
 }
